@@ -4,9 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -17,7 +24,10 @@ import android.view.ViewGroup;
  * Use the {@link HideAndSeekArea#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HideAndSeekArea extends Fragment {
+public class HideAndSeekArea extends Fragment implements SeekBar.OnSeekBarChangeListener, HideAndSeekAreaMVP.view{
+    @BindView(R.id.seekBar) SeekBar seekBarMetersAllowedToPlay;
+
+    @BindView(R.id.metersTextView) TextView textShowSeekBarProgress;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,7 +37,9 @@ public class HideAndSeekArea extends Fragment {
     private String mParam1;
     private String mParam2;
 
+
     private OnFragmentInteractionListener mListener;
+    private HideAndSeekAreaPresenter presenter;
 
     public HideAndSeekArea() {
         // Required empty public constructor
@@ -65,7 +77,10 @@ public class HideAndSeekArea extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_hide_and_seek_area, container, false);
-        
+        ButterKnife.bind(this, view);
+        presenter = new HideAndSeekAreaPresenter(this);
+        seekBarMetersAllowedToPlay.setOnSeekBarChangeListener(this);
+
         return view;
     }
 
@@ -92,6 +107,27 @@ public class HideAndSeekArea extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        presenter.showSeekBarProgress(i);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void getSeekBarProgressInMeters(int progressInMeters) {
+        textShowSeekBarProgress.setText(String.valueOf(progressInMeters));
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

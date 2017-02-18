@@ -3,6 +3,7 @@ package hidenseek.devlanding.com.hideandseek.Maps;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import hidenseek.devlanding.com.hideandseek.HideAndSeekArea;
 import hidenseek.devlanding.com.hideandseek.R;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapsMVP.view {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapsMVP.view, HideAndSeekArea.OnFragmentInteractionListener{
 
     private static final int MY_PERMISSIONS_FINE_LOCATION = 1;
     private GoogleMap mMap;
@@ -79,5 +80,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_FINE_LOCATION);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

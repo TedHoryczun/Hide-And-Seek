@@ -1,20 +1,15 @@
-package hidenseek.devlanding.com.hideandseek;
+package hidenseek.devlanding.com.hideandseek.Maps;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.LocationSource;
 
 /**
  * Created by ted on 2/17/17.

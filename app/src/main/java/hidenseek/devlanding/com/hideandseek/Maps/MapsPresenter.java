@@ -1,14 +1,9 @@
-package hidenseek.devlanding.com.hideandseek;
+package hidenseek.devlanding.com.hideandseek.Maps;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.v4.content.ContextCompat;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -46,4 +41,7 @@ public class MapsPresenter implements MapsMVP.presenter{
         }, 0, 20, TimeUnit.SECONDS);
     }
 
+    public void askToReceiveCurrentLocationPermission() {
+        view.askForCurrentLocationPermission();
+    }
 }

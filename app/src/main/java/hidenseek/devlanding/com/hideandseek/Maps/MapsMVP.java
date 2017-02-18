@@ -1,4 +1,4 @@
-package hidenseek.devlanding.com.hideandseek;
+package hidenseek.devlanding.com.hideandseek.Maps;
 
 import android.content.Context;
 import android.location.Location;
@@ -11,6 +11,8 @@ public interface MapsMVP {
     interface view{
 
         void createMarketAtCurrentLocation(Location currentLocation);
+
+        void askForCurrentLocationPermission();
     }
     interface presenter{
         Location getCurrentLocation();

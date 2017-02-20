@@ -7,8 +7,12 @@ package hidenseek.devlanding.com.hideandseek;
 public interface HideAndSeekAreaMVP {
     interface view{
        void getSeekBarProgressInMeters(int progressInMeters);
+
+        void sendProgressInMetersToMapsActivity(int progressInMeters);
     }
     interface presenter{
         void showSeekBarProgress(int progressInMeters);
+
+        void placeCircleRadiusAroundCurrentPositionOnMap(int progressInMeters);
     }
 }

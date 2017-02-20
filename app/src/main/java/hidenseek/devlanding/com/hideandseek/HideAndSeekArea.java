@@ -126,6 +126,12 @@ public class HideAndSeekArea extends Fragment implements SeekBar.OnSeekBarChange
     @Override
     public void getSeekBarProgressInMeters(int progressInMeters) {
         textShowSeekBarProgress.setText(String.valueOf(progressInMeters));
+        presenter.placeCircleRadiusAroundCurrentPositionOnMap(progressInMeters);
+    }
+
+    @Override
+    public void sendProgressInMetersToMapsActivity(int progressInMeters) {
+
     }
 
 

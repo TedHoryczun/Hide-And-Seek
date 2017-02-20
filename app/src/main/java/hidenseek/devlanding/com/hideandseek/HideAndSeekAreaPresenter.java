@@ -18,4 +18,9 @@ public class HideAndSeekAreaPresenter implements HideAndSeekAreaMVP.presenter{
     public void showSeekBarProgress(int progressInMeters) {
         view.getSeekBarProgressInMeters(progressInMeters);
     }
+
+    @Override
+    public void placeCircleRadiusAroundCurrentPositionOnMap(int progressInMeters) {
+       view.sendProgressInMetersToMapsActivity(progressInMeters);
+    }
 }

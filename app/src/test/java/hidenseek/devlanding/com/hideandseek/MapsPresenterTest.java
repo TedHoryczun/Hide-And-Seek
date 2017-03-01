@@ -26,17 +26,10 @@ import hidenseek.devlanding.com.hideandseek.Maps.MapsPresenter;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({MapsPresenter.class})
-
 public class MapsPresenterTest {
     @Rule
     public MockitoRule mockitoRule =
             MockitoJUnit.rule();
-
-    MapsPresenter newPresenter;
-
-
 
     @InjectMocks
     MapsPresenter presenter, spyPresenter;

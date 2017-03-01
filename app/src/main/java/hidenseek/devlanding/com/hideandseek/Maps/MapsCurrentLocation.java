@@ -10,23 +10,30 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.Circle;
 
 /**
  * Created by ted on 2/17/17.
  */
 
-public class MapsInteractor implements GoogleApiClient.ConnectionCallbacks,
+public class MapsCurrentLocation implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener, MapsMVP.Interactor {
 
+    private final MapsMVP.presenter presenter;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location currentLocation;
+
+    public MapsCurrentLocation(MapsMVP.presenter presenter) {
+        this.presenter = presenter;
+    }
 
     @Override
     public Location getCurrentLocation() {
         return currentLocation;
     }
+
     @Override
     public synchronized void buildGoogleApiClient(Context context) {
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -39,8 +46,8 @@ public class MapsInteractor implements GoogleApiClient.ConnectionCallbacks,
 
     @Override
     public void onLocationChanged(Location location) {
-
         setCurrentLocation(location);
+        presenter.showErrorMsgIfOutOfHideAndSeekAreaBounds(location);
     }
 
     @Override
@@ -51,6 +58,27 @@ public class MapsInteractor implements GoogleApiClient.ConnectionCallbacks,
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
 
+    }
+
+    @Override
+    public boolean isUserOutSideHideAndSeekArea(Location location) {
+        boolean isUserOutsideHideAndSeekArea = false;
+        Circle metersAllowedToPlayIn = presenter.getMetersAllowedToPlayIn();
+        if (metersAllowedToPlayIn != null) {
+
+            double startLatitude = location.getLatitude();
+            double startLongitude = location.getLongitude();
+            double endLongitude = metersAllowedToPlayIn.getCenter().longitude;
+            double endLatitude = metersAllowedToPlayIn.getCenter().latitude;
+
+            float[] results = new float[2];
+            Location.distanceBetween(startLatitude, startLongitude,
+                    endLatitude, endLongitude, results);
+            if (results[0] > metersAllowedToPlayIn.getRadius()) {
+                isUserOutsideHideAndSeekArea = true;
+            }
+        }
+        return isUserOutsideHideAndSeekArea;
     }
 
     @Override

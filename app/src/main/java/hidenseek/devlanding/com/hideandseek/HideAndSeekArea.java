@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -131,7 +133,7 @@ public class HideAndSeekArea extends Fragment implements SeekBar.OnSeekBarChange
 
     @Override
     public void sendProgressInMetersToMapsActivity(int progressInMeters) {
-
+        EventBus.getDefault().post(progressInMeters);
     }
 
 

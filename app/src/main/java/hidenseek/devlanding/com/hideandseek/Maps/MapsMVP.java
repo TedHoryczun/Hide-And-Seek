@@ -24,6 +24,10 @@ public interface MapsMVP {
         void displayErrorMsgIfOutOfHideAndSeekAreaBounds(Location location);
 
         void displayErrorOutOfBounds(Location currentLocation);
+
+        void displayAlertDialogWouldYouLikeToPlayOrCreateAGame();
+
+        void displayMapSeekingAreaSelector();
     }
     interface presenter{
         Location getCurrentLocation();
@@ -41,6 +45,8 @@ public interface MapsMVP {
         boolean isUserOutSideHideAndSeekArea(Location currentLocation);
 
         Circle getMetersAllowedToPlayIn();
+
+        void displayPopupWouldYouLikeToPlayOrCreateGame();
     }
     interface Interactor{
        Location getCurrentLocation();

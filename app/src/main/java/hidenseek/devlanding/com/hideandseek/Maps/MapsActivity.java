@@ -37,11 +37,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapsFragment);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mapsAreaSelector, HideAndSeekArea.newInstance("", ""))
-                .commit();
         presenter = new MapsPresenter(this, getApplicationContext());
         mapFragment.getMapAsync(this);
+        presenter.displayPopupWouldYouLikeToPlayOrCreateGame();
     }
 
     @Override
@@ -110,8 +108,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void updateCircleAroundCurrentLocationWhereAllowedToPlay(LatLng currentLocationOnMap, Integer meters) {
-        metersAllowedToPlayIn.setCenter(currentLocationOnMap);
-        metersAllowedToPlayIn.setRadius(meters);
+        presenter.metersAllowedToPlayIn.setCenter(currentLocationOnMap);
+        presenter.metersAllowedToPlayIn.setRadius(meters);
     }
 
     @Override
@@ -141,6 +139,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    public void displayAlertDialogWouldYouLikeToPlayOrCreateAGame() {
+
+        AlertDialog alertDialogBuilder = new AlertDialog.Builder(
+                MapsActivity.this)
+                .setTitle("Create A Game")
+                .setMessage("Would you like to create, or play a game?")
+                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.createGame();
+                    }
+                })
+                .setNegativeButton("Play", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        presenter.playGame();
+                    }
+                }).show();
+    }
+
+    @Override
+    public void displayMapSeekingAreaSelector() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mapsAreaSelector, HideAndSeekArea.newInstance("", ""))
+                .commit();
+    }
 
 
     @Subscribe

@@ -25,7 +25,7 @@ public class MapsPresenter implements MapsMVP.presenter{
 
     public MapsPresenter(MapsMVP.view view, Context context){
         this.view = view;
-        this.interactor = new MapsCurrentLocation(this);
+        this.interactor = new MapsCurrentLocation(this, context);
     }
 
     public MapsPresenter(MapsMVP.view view, MapsMVP.Interactor interactor, Context context) {
@@ -93,5 +93,18 @@ public class MapsPresenter implements MapsMVP.presenter{
 
     public void setMetersAllowedToPlayIn(Circle metersAllowedToPlayIn) {
         this.metersAllowedToPlayIn = metersAllowedToPlayIn;
+    }
+
+    @Override
+    public void displayPopupWouldYouLikeToPlayOrCreateGame() {
+        view.displayAlertDialogWouldYouLikeToPlayOrCreateAGame();
+
+    }
+
+    public void playGame() {
+    }
+
+    public void createGame() {
+        view.displayMapSeekingAreaSelector();
     }
 }

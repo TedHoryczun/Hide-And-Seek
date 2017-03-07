@@ -1,10 +1,13 @@
 package hidenseek.devlanding.com.hideandseek.Maps;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,12 +24,15 @@ public class MapsCurrentLocation implements GoogleApiClient.ConnectionCallbacks,
         com.google.android.gms.location.LocationListener, MapsMVP.Interactor {
 
     private final MapsMVP.presenter presenter;
+    private final Context context;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location currentLocation;
 
-    public MapsCurrentLocation(MapsMVP.presenter presenter) {
+    public MapsCurrentLocation(MapsMVP.presenter presenter, Context context) {
         this.presenter = presenter;
+        this.context = context;
+        buildGoogleApiClient(context);
     }
 
     @Override
@@ -52,12 +58,12 @@ public class MapsCurrentLocation implements GoogleApiClient.ConnectionCallbacks,
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        System.out.println("connected");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
     }
 
     @Override
@@ -89,6 +95,7 @@ public class MapsCurrentLocation implements GoogleApiClient.ConnectionCallbacks,
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+        System.out.println("connection failed: " + connectionResult.getErrorMessage());
     }
 
     public void setCurrentLocation(Location currentLocation) {

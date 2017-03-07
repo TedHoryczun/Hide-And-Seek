@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "146940627122",
+    "firebase_url": "https://hide-and-seek-5541a.firebaseio.com",
+    "project_id": "hide-and-seek-5541a",
+    "storage_bucket": "hide-and-seek-5541a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146940627122:android:4b30b10e3f9b7b03",
+        "android_client_info": {
+          "package_name": "hidenseek.devlanding.com.hideandseek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146940627122-oavlpn7gpq0ebbaj1ub4ivr244qti9hp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs-nvk9iwXTJCQt_ZHpRgXduFD4jdTPfg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

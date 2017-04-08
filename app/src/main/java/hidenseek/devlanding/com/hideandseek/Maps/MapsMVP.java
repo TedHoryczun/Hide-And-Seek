@@ -28,6 +28,10 @@ public interface MapsMVP {
         void displayAlertDialogWouldYouLikeToPlayOrCreateAGame();
 
         void displayMapSeekingAreaSelector();
+
+        void displayEnterGameCodeDialog();
+
+        void displayNoGameExistsError(String gameCode);
     }
     interface presenter{
         Location getCurrentLocation();
@@ -47,6 +51,8 @@ public interface MapsMVP {
         Circle getMetersAllowedToPlayIn();
 
         void displayPopupWouldYouLikeToPlayOrCreateGame();
+
+        void updateCurrentLocation(double latitude, double longitude);
     }
     interface Interactor{
        Location getCurrentLocation();
@@ -55,6 +61,15 @@ public interface MapsMVP {
         void buildGoogleApiClient(Context context);
 
         boolean isUserOutSideHideAndSeekArea(Location location);
+    }
+    interface EasyFirebase{
+        void login();
+
+        void listenForAuthRequests();
+
+        void unListenForAuthRequests();
+
+        String getUUID();
     }
 
 }

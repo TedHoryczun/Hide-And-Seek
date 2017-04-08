@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "146940627122-pd99bafcvscb8qkkauu8uom0o5kos9dn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hidenseek.devlanding.com.hideandseek",
+            "certificate_hash": "7f684b6d0655e483ec6f684f4a6c7b65b6e79a8d"
+          }
+        },
+        {
           "client_id": "146940627122-oavlpn7gpq0ebbaj1ub4ivr244qti9hp.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146940627122-oavlpn7gpq0ebbaj1ub4ivr244qti9hp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

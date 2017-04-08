@@ -53,6 +53,7 @@ public class MapsCurrentLocation implements GoogleApiClient.ConnectionCallbacks,
     @Override
     public void onLocationChanged(Location location) {
         setCurrentLocation(location);
+        presenter.updateCurrentLocation(location.getLatitude(), location.getLongitude());
         presenter.showErrorMsgIfOutOfHideAndSeekAreaBounds(location);
     }
 

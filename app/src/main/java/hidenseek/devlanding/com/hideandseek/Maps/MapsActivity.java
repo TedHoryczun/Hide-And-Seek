@@ -9,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +47,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
+        presenter.startFirebase();
+        presenter.loginToFirebase();
     }
 
     @Override
@@ -89,6 +93,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        presenter.stopFirebase();
     }
 
     @Override
@@ -114,14 +119,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void displayErrorMsgIfOutOfHideAndSeekAreaBounds(Location location) {
-        if(presenter.isUserOutSideHideAndSeekArea(location)){
+        if (presenter.isUserOutSideHideAndSeekArea(location)) {
             displayErrorOutOfBounds(location);
         }
 
     }
 
     @Override
-    public void displayErrorOutOfBounds(final Location currentLocation){
+    public void displayErrorOutOfBounds(final Location currentLocation) {
         presenter.outOfBoundsErrorCurrentlyBeingDisplayed = true;
         final AlertDialog alertDialog = new AlertDialog.Builder(MapsActivity.this)
                 .setTitle(getResources().getString(R.string.outOfBoundsTitle))
@@ -130,7 +135,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        if(presenter.isUserOutSideHideAndSeekArea(currentLocation)){
+                        if (presenter.isUserOutSideHideAndSeekArea(currentLocation)) {
                             dialogInterface.cancel();
                         }
                         presenter.outOfBoundsErrorCurrentlyBeingDisplayed = false;
@@ -167,6 +172,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .commit();
     }
 
+    @Override
+    public void displayEnterGameCodeDialog() {
+        final EditText taskEditText = new EditText(this);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Game Code")
+                .setMessage("Enter Hide and Seek Game Code")
+                .setView(taskEditText)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String gameCode = taskEditText.getText().toString();
+                        presenter.enterGame(gameCode);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+
+
+    }
+
+    @Override
+    public void displayNoGameExistsError(String gameCode) {
+        final EditText taskEditText = new EditText(this);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Game Code")
+                .setMessage(gameCode + " Doesn't Exist, Enter Hide and Seek Game Code")
+                .setView(taskEditText)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String gameCode = taskEditText.getText().toString();
+                        presenter.enterGame(gameCode);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+    }
+
 
     @Subscribe
     public void addMetersAllowedToHideAroundCurrentLocationOnMap(Integer meters) {
@@ -177,7 +222,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.leaveAllGames();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        presenter.loginToFirebase();
+    }
+
+    @Override
     public void onFragmentInteraction(Uri uri) {
+
 
     }
 }

@@ -24,11 +24,18 @@
 
         android:text="Meters"/>
     <SeekBar
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-
+        android:layout_alignParentLeft="true"
         android:id="@+id/seekBar"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/seekBar"
+        android:id="@+id/playGameButton"
+        android:text="play"/>
 
 </RelativeLayout>

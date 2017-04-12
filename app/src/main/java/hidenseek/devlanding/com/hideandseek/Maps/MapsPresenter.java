@@ -9,6 +9,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import hidenseek.devlanding.com.hideandseek.Firebase.EasyFirebase;
 import hidenseek.devlanding.com.hideandseek.Firebase.Firebaselistener;
+import hidenseek.devlanding.com.hideandseek.Firebase.HideGame;
+import hidenseek.devlanding.com.hideandseek.Game;
 import hidenseek.devlanding.com.hideandseek.GameCode;
 
 /**
@@ -24,6 +26,7 @@ public class MapsPresenter implements MapsMVP.presenter {
     public boolean outOfBoundsErrorCurrentlyBeingDisplayed = false;
     public Circle metersAllowedToPlayIn;
     private EasyFirebase firebase;
+    private HideGame hideHame;
 
     public MapsPresenter(MapsMVP.view view, Context context) {
         this.context = context;
@@ -117,6 +120,7 @@ public class MapsPresenter implements MapsMVP.presenter {
     public void createGame() {
         final String uniqueGameCode = GameCode.getUniqueGameCode();
         firebase.isGameCodeAlreadyUsed(uniqueGameCode, new Firebaselistener() {
+
             @Override
             public void onSuccess() {
                 createGame();
@@ -124,10 +128,10 @@ public class MapsPresenter implements MapsMVP.presenter {
 
             @Override
             public void onError() {
-                firebase.createGame(uniqueGameCode);
+                hideHame = firebase.createGame(uniqueGameCode);
+                view.displayMapSeekingAreaSelector(uniqueGameCode);
             }
         });
-        view.displayMapSeekingAreaSelector();
     }
 
     public void loginToFirebase() {
@@ -147,7 +151,7 @@ public class MapsPresenter implements MapsMVP.presenter {
         firebase.joinGame(gameCode, new Firebaselistener() {
             @Override
             public void onSuccess() {
-
+                firebase.getGameRules(gameCode);
             }
 
             @Override
@@ -162,4 +166,26 @@ public class MapsPresenter implements MapsMVP.presenter {
     public void leaveAllGames() {
         firebase.leaveAllGames();
     }
+
+    public void displayGameCode(HideGame game) {
+        view.displayGameCode(game, "Share game code to play with others");
+    }
+
+    public void playGameIfEnoughPlayersInGame() {
+        firebase.gameHasEnoughPlayers(new Firebaselistener() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onError() {
+                view.displayGameCode(hideHame, "Not Enough Players"); 
+            }
+        });
+    }
+
+    public void startGame() {
+        firebase.insertGameRules(metersAllowedToPlayIn);
+    }
+
 }

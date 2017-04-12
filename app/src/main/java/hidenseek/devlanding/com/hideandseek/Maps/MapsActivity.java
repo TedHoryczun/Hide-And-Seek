@@ -10,18 +10,18 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import hidenseek.devlanding.com.hideandseek.Firebase.HideGame;
+import hidenseek.devlanding.com.hideandseek.Game;
 import hidenseek.devlanding.com.hideandseek.HideAndSeekArea;
 import hidenseek.devlanding.com.hideandseek.R;
 
@@ -30,7 +30,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int MY_PERMISSIONS_FINE_LOCATION = 1;
     private GoogleMap mMap;
     private MapsPresenter presenter;
-    private Circle metersAllowedToPlayIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +106,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int strokeColor = 0xffff0000;
         int shadeColor = 0x44ff0000;
         CircleOptions circleOptions = new CircleOptions().center(currentLocationOnMap).radius(meters).fillColor(shadeColor).strokeColor(strokeColor).strokeWidth(2);
-        presenter.metersAllowedToPlayIn = mMap.addCircle(circleOptions);
+        presenter.setMetersAllowedToPlayIn(mMap.addCircle(circleOptions));
         presenter.metersAllowedToPlayInAlreadyDrawn = true;
     }
 
@@ -166,9 +165,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void displayMapSeekingAreaSelector() {
+    public void displayMapSeekingAreaSelector(String uniqueGameCode) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mapsAreaSelector, HideAndSeekArea.newInstance("", ""))
+                .replace(R.id.mapsAreaSelector, HideAndSeekArea.newInstance(uniqueGameCode, ""))
                 .commit();
     }
 
@@ -212,6 +211,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         dialog.show();
     }
 
+    @Override
+    public void displayGameCode(HideGame game, String title) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(game.gameCodeOfGamePlaying)
+                .setPositiveButton("Play", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       presenter.playGameIfEnoughPlayersInGame();
+
+                    }
+                })
+                .setNegativeButton("Quit", null)
+                .create();
+        dialog.show();
+
+    }
+
 
     @Subscribe
     public void addMetersAllowedToHideAroundCurrentLocationOnMap(Integer meters) {
@@ -220,7 +237,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         presenter.addMetersAllowedToPlay(latlngCurrentLocation, meters);
     }
+    @Subscribe
+    public void gameIsCreated(HideGame game){
+        presenter.displayGameCode(game);
+        presenter.startGame();
+    }
 
+    @Subscribe
+    public void joinedGameRules(Game game){
+        float gameCenterLat = game.centerLat;
+        float gameCenterlng = game.centerLng;
+        LatLng latLng = new LatLng(gameCenterLat, gameCenterlng);
+        presenter.addMetersAllowedToPlay(latLng, (int) game.radius);
+    }
     @Override
     protected void onPause() {
         super.onPause();

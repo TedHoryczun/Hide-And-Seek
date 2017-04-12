@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -16,6 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.greenrobot.eventbus.EventBus;
+
+import hidenseek.devlanding.com.hideandseek.Game;
 import hidenseek.devlanding.com.hideandseek.Maps.MapsMVP;
 import hidenseek.devlanding.com.hideandseek.R;
 
@@ -103,13 +108,14 @@ public class EasyFirebase implements MapsMVP.EasyFirebase {
         });
     }
 
-    public void createGame(String uniqueGameCode) {
+    public HideGame createGame(String uniqueGameCode) {
         String userId = user.getUid();
         String seekerString = context.getResources().getString(R.string.seeker);
         String gamesString = context.getResources().getString(R.string.game);
         firebaseDatabase.child(gamesString).child(uniqueGameCode)
                 .child(userId).setValue(seekerString);
         gameCodeOfGamePlaying = uniqueGameCode;
+        return new HideGame(uniqueGameCode, true);
     }
     public void joinGame(final String gameCode, final Firebaselistener listener){
 
@@ -160,5 +166,57 @@ public class EasyFirebase implements MapsMVP.EasyFirebase {
                 .child(userId)
                 .child("currentLocation")
                 .child("longitude").setValue(longitude);
+    }
+
+    public void gameHasEnoughPlayers(final Firebaselistener listener) {
+        String gameString = context.getResources().getString(R.string.game);
+        String userId = user.getUid();
+        firebaseDatabase.child(gameString).child(gameCodeOfGamePlaying).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long children = dataSnapshot.getChildrenCount();
+                if(children > 1){
+                    listener.onSuccess();
+                }else{
+                    listener.onError();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void insertGameRules(Circle metersAllowedToPlayIn) {
+        LatLng center = metersAllowedToPlayIn.getCenter();
+        double radius = metersAllowedToPlayIn.getRadius();
+        firebaseDatabase.child("game").child(gameCodeOfGamePlaying).child("rules")
+                .child("centerLat").setValue(center.latitude);
+        firebaseDatabase.child("game").child(gameCodeOfGamePlaying).child("rules")
+                .child("centerLng").setValue(center.longitude);
+        firebaseDatabase.child("game").child(gameCodeOfGamePlaying).child("rules")
+                .child("radius").setValue(radius);
+
+    }
+
+    public void getGameRules(String gameCode) {
+       firebaseDatabase.child("game").child(gameCode).child("rules").addListenerForSingleValueEvent(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               if(dataSnapshot.exists()){
+                   Game game = dataSnapshot.getValue(Game.class);
+                   EventBus.getDefault().post(game);
+               }
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+
+           }
+       });
     }
 }

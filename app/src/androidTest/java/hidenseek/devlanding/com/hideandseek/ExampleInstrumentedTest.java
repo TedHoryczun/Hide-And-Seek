@@ -2,6 +2,7 @@ package hidenseek.devlanding.com.hideandseek;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
@@ -18,9 +19,6 @@ import static org.junit.Assert.*;
 public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("hidenseek.devlanding.com.hideandseek", appContext.getPackageName());
     }
 }

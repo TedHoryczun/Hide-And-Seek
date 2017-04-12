@@ -16,6 +16,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import hidenseek.devlanding.com.hideandseek.Firebase.HideGame;
 
 
 /**
@@ -74,6 +76,13 @@ public class HideAndSeekArea extends Fragment implements SeekBar.OnSeekBarChange
         }
     }
 
+    @OnClick(R.id.playGameButton)
+    public void playGameButtonClick(){
+        HideGame game = new HideGame(mParam1, true);
+        EventBus.getDefault().post(game);
+        sendProgressInMetersToMapsActivity(seekBarMetersAllowedToPlay.getProgress());
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

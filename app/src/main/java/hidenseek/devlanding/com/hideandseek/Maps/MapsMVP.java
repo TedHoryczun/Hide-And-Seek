@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
+import hidenseek.devlanding.com.hideandseek.Firebase.HideGame;
+
 /**
  * Created by ted on 2/17/17.
  */
@@ -27,11 +29,13 @@ public interface MapsMVP {
 
         void displayAlertDialogWouldYouLikeToPlayOrCreateAGame();
 
-        void displayMapSeekingAreaSelector();
+        void displayMapSeekingAreaSelector(String uniqueGameCode);
 
         void displayEnterGameCodeDialog();
 
         void displayNoGameExistsError(String gameCode);
+
+        void displayGameCode(HideGame game, String s);
     }
     interface presenter{
         Location getCurrentLocation();
